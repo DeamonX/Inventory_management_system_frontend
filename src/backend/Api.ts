@@ -1,29 +1,20 @@
 import axios from "axios";
 import { createCategoryInterface } from "../models/entities";
 
-const getReq = (uri: string) => {
-  return axios.get<Response>("http://localhost:8080/api/" + uri);
-};
+axios.defaults.baseURL = "http://localhost:8080/api/";
 
 export const getProducts = () => {
-  return getReq("products/");
+  return axios.get<Response>("products/");
 };
 export const getOrders = () => {
-  return getReq("orders/");
+  return axios.get<Response>("orders/");
 };
 export const getStorage = () => {
-  return getReq("storage/");
+  return axios.get<Response>("storage/");
 };
 export const getAllCategory = () => {
-  return getReq("category/");
+  return axios.get<Response>("category/");
 };
 export const createCategory = (category: createCategoryInterface) => {
-  return axios.post<Response>("http://localhost:8080/api/category", {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-    body: JSON.stringify(category.name),
-  });
+  return axios.post<Response>("category/", { name: category.name });
 };
