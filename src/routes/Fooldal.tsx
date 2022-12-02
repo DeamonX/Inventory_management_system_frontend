@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { Link, Outlet } from "react-router-dom";
-import { navBarStyle } from "./styles/navBarStyle";
+import { navBarStyle } from "../styles/navBarStyle";
 
-const App = () => {
+const Fooldal = () => {
   return (
     <>
       <Box
@@ -24,10 +24,16 @@ const App = () => {
         <Link style={navBarStyle} to={"utanrendeles"}>
           Utánrendelés
         </Link>
+        <Link style={navBarStyle} to={"kategoria"}>
+          Kategóriák
+        </Link>
+        <Link style={navBarStyle} to={"termek"}>
+          Termékek
+        </Link>
       </Box>
       <Outlet />
     </>
   );
 };
 
-export default App;
+export default Fooldal;

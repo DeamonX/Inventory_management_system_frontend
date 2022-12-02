@@ -1,8 +1,16 @@
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { useLoaderData } from "react-router";
-import { createCategory } from "../backend/Api";
-import { CategoryInterface, createCategoryInterface } from "../models/entities";
+import { createCategory, getCategory } from "../backend/Api";
+import { CategoryInterface } from "../models/entities";
+import KategoriaSor from "./KategoriaSor";
 
 const Kategoria = () => {
   const [kategoriak, setKategoriak] = useState<CategoryInterface[]>(
@@ -16,12 +24,12 @@ const Kategoria = () => {
     setUjKategoria(e.target.value as string);
   };
   const handleCreateNewCategory = async () => {
-    let kategoria = {
-      name: ujKategoria,
-    } as createCategoryInterface;
-    const res = createCategory(kategoria);
-
-    console.log(res);
+    await createCategory(ujKategoria);
+    handleReRender();
+  };
+  const handleReRender = async () => {
+    const { data } = await getCategory();
+    setKategoriak(data as unknown as CategoryInterface[]);
   };
   return (
     <>
@@ -35,13 +43,13 @@ const Kategoria = () => {
           <Box
             sx={{
               width: "fit-content",
+              minHeight: 100,
               bgcolor: "#888",
               m: "auto",
               mt: 50,
               p: 3,
               borderRadius: 5,
             }}
-            component={"form"}
           >
             <Typography sx={{ textAlign: "left", mb: 5, fontSize: 20 }}>
               Új kategória létrehozása
@@ -87,6 +95,7 @@ const Kategoria = () => {
               variant="contained"
               onClick={() => {
                 handleCreateNewCategory();
+                setOpenModal(false);
               }}
             >
               Létrehozás
@@ -102,13 +111,20 @@ const Kategoria = () => {
           borderRadius: 5,
           textAlign: "center",
           width: "70%",
+          minHeight: 50,
           height: "fit-content",
           backgroundColor: "#999",
         }}
       >
+        <Typography
+          sx={{ textAlign: "left", fontWeight: "bold", fontSize: 20 }}
+        >
+          Kategóriák
+        </Typography>
         <Button
           sx={{
             float: "right",
+            mt: -4,
             backgroundColor: "#888",
             color: "#000",
             "&:hover": {
@@ -122,6 +138,21 @@ const Kategoria = () => {
         >
           Új kategória létrehozása
         </Button>
+        <Divider sx={{ mt: 5 }} />
+        {kategoriak.map((kategoria, key) => {
+          return (
+            <Box
+              key={key}
+              sx={{ display: "flex", m: "auto", mt: 5, width: "100%" }}
+            >
+              <KategoriaSor
+                id={kategoria.id}
+                name={kategoria.name}
+                rerender={handleReRender}
+              />
+            </Box>
+          );
+        })}
       </Box>
     </>
   );
